@@ -1,5 +1,7 @@
 package io.github.pdrotmz.book_e_comm.controller;
 
+import io.github.pdrotmz.book_e_comm.dto.BookRequestDTO;
+import io.github.pdrotmz.book_e_comm.dto.BookResponseDTO;
 import io.github.pdrotmz.book_e_comm.model.Book;
 import io.github.pdrotmz.book_e_comm.service.BookServiceImpl;
 import jakarta.validation.Valid;
@@ -23,9 +25,9 @@ public class BookController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Book> registerBook(@Valid @RequestBody Book book) {
-        Book newBook = bookService.registerBook(book);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newBook);
+    public ResponseEntity<BookResponseDTO> registerBook(@Valid @RequestBody BookRequestDTO request) {
+        BookResponseDTO response = bookService.registerBook(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
