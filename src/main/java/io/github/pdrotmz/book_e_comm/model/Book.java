@@ -1,8 +1,10 @@
 package io.github.pdrotmz.book_e_comm.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -25,16 +27,22 @@ public class Book {
     @Column(name = "price", nullable = false, precision = 5, scale = 2)
     private BigDecimal price;
 
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "book_id")
+    private Author author;
+
 
     public Book() {
     }
 
-    public Book(UUID id, String name, String description, Integer quantity, BigDecimal price) {
+    public Book(UUID id, String name, String description, Integer quantity, BigDecimal price, Author author) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.quantity = quantity;
         this.price = price;
+        this.author = author;
     }
 
     public UUID getId() {
@@ -75,5 +83,13 @@ public class Book {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 }
