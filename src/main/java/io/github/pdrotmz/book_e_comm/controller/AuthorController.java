@@ -1,5 +1,7 @@
 package io.github.pdrotmz.book_e_comm.controller;
 
+import io.github.pdrotmz.book_e_comm.dto.AuthorRequestDTO;
+import io.github.pdrotmz.book_e_comm.dto.AuthorResponseDTO;
 import io.github.pdrotmz.book_e_comm.model.Author;
 import io.github.pdrotmz.book_e_comm.service.AuthorServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -22,9 +24,9 @@ public class AuthorController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Author> registerAuthor(@RequestBody Author author) {
-        Author newAuthor = authorService.registerAuthor(author);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newAuthor);
+    public ResponseEntity<AuthorResponseDTO> registerAuthor(@RequestBody AuthorRequestDTO request) {
+        AuthorResponseDTO response = authorService.registerAuthor(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping

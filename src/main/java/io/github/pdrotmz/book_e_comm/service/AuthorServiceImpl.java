@@ -1,7 +1,10 @@
 package io.github.pdrotmz.book_e_comm.service;
 
+import io.github.pdrotmz.book_e_comm.dto.AuthorRequestDTO;
+import io.github.pdrotmz.book_e_comm.dto.AuthorResponseDTO;
 import io.github.pdrotmz.book_e_comm.model.Author;
 import io.github.pdrotmz.book_e_comm.repository.AuthorRepository;
+import io.github.pdrotmz.book_e_comm.repository.BookRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,14 +18,22 @@ import java.util.UUID;
 public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository repository;
+    private final BookRepository bookRepository;
 
-    public AuthorServiceImpl(AuthorRepository repository) {
+    public AuthorServiceImpl(AuthorRepository repository, BookRepository bookRepository) {
         this.repository = repository;
+        this.bookRepository = bookRepository;
     }
 
     @Override
-    public Author registerAuthor(Author author) {
-        return repository.save(author);
+    public AuthorResponseDTO registerAuthor(AuthorRequestDTO request) {
+        Author author = new Author();
+        author.setName(request.name());
+        author.setDescription(request.description());
+        author.setBooks(request.books());
+
+        repository.save(author);
+        return new AuthorResponseDTO(author.getId(), author.getName(), author.getDescription(), author.getBooks());
     }
 
     @Override
