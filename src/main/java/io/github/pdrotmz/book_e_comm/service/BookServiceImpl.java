@@ -8,9 +8,13 @@ import io.github.pdrotmz.book_e_comm.model.Author;
 import io.github.pdrotmz.book_e_comm.model.Book;
 import io.github.pdrotmz.book_e_comm.repository.AuthorRepository;
 import io.github.pdrotmz.book_e_comm.repository.BookRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -55,8 +59,18 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> findAllBooks() {
-        return repository.findAll();
+    public Page<BookResponseDTO> findAllBooks(int page, int size, String name, UUID authorId, BigDecimal minPrice, BigDecimal maxPrice) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+
+        Page<Book> books = repository.findAllWithFilters(name, authorId, minPrice, maxPrice, pageable);
+
+        return books.map(book -> new BookResponseDTO(
+                book.getId(),
+                book.getName(),
+                book.getQuantity(),
+                book.getPrice(),
+                book.getAuthor().getName()
+        ));
     }
 
     @Override
