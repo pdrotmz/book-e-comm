@@ -5,11 +5,13 @@ import io.github.pdrotmz.book_e_comm.dto.BookResponseDTO;
 import io.github.pdrotmz.book_e_comm.model.Book;
 import io.github.pdrotmz.book_e_comm.service.BookServiceImpl;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,8 +33,15 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Book>> findAllBooks() {
-        List<Book> books = bookService.findAllBooks();
+    public ResponseEntity<Page<BookResponseDTO>> findAllBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) UUID authorId,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice
+            ) {
+        Page<BookResponseDTO> books = bookService.findAllBooks(page, size, name, authorId, minPrice, maxPrice);
         return ResponseEntity.status(HttpStatus.OK).body(books);
     }
 
