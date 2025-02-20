@@ -27,6 +27,10 @@ public class Book {
     @Column(name = "price", nullable = false, precision = 5, scale = 2)
     private BigDecimal price;
 
+    @ManyToOne
+    @JoinColumn(name = "publisher_id")
+    private Publisher publisher;
+
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "author_id")
@@ -36,12 +40,13 @@ public class Book {
     public Book() {
     }
 
-    public Book(UUID id, String name, String description, Integer quantity, BigDecimal price, Author author) {
+    public Book(UUID id, String name, String description, Integer quantity, BigDecimal price, Publisher publisher, Author author) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.quantity = quantity;
         this.price = price;
+        this.publisher = publisher;
         this.author = author;
     }
 
@@ -83,6 +88,14 @@ public class Book {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public Publisher getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(Publisher publisher) {
+        this.publisher = publisher;
     }
 
     public Author getAuthor() {

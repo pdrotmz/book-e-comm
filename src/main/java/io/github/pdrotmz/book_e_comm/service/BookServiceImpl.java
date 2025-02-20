@@ -6,13 +6,17 @@ import io.github.pdrotmz.book_e_comm.exception.author.AuthorNotFoundByIdExceptio
 import io.github.pdrotmz.book_e_comm.exception.book.*;
 import io.github.pdrotmz.book_e_comm.model.Author;
 import io.github.pdrotmz.book_e_comm.model.Book;
+import io.github.pdrotmz.book_e_comm.model.Publisher;
 import io.github.pdrotmz.book_e_comm.repository.AuthorRepository;
 import io.github.pdrotmz.book_e_comm.repository.BookRepository;
+import io.github.pdrotmz.book_e_comm.repository.PublisherRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -23,10 +27,12 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository repository;
     private final AuthorRepository authorRepository;
+    private final PublisherRepository publisherRepository;
 
-    public BookServiceImpl(BookRepository repository, AuthorRepository authorRepository) {
+    public BookServiceImpl(BookRepository repository, AuthorRepository authorRepository, PublisherRepository publisherRepository) {
         this.repository = repository;
         this.authorRepository = authorRepository;
+        this.publisherRepository = publisherRepository;
     }
 
     @Override
@@ -42,6 +48,9 @@ public class BookServiceImpl implements BookService {
         Author author = authorRepository.findById(request.authorId())
                 .orElseThrow(() -> new AuthorNotFoundByIdException(request.authorId()));
 
+        Publisher publisher = publisherRepository.findById(request.publisherId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
         boolean bookExists = repository.existsByNameIgnoreCaseAndAuthorId(request.name(), request.authorId());
         if(bookExists) {
             throw new BookAlreadyExistsException("A book with this name and author already exists.");
@@ -53,9 +62,10 @@ public class BookServiceImpl implements BookService {
         book.setQuantity(request.quantity());
         book.setPrice(request.price());
         book.setAuthor(author);
+        book.setPublisher(publisher);
 
         repository.save(book);
-        return new BookResponseDTO(book.getId() ,book.getName(), book.getQuantity(), book.getPrice(), book.getAuthor().getName());
+        return new BookResponseDTO(book.getId() ,book.getName(), book.getQuantity(), book.getPrice(), book.getAuthor().getName(), book.getPublisher().getName());
     }
 
     @Override
@@ -69,7 +79,8 @@ public class BookServiceImpl implements BookService {
                 book.getName(),
                 book.getQuantity(),
                 book.getPrice(),
-                book.getAuthor().getName()
+                book.getAuthor().getName(),
+                book.getPublisher().getName()
         ));
     }
 
