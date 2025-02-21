@@ -2,6 +2,8 @@ package io.github.pdrotmz.book_e_comm.service;
 
 import io.github.pdrotmz.book_e_comm.dto.PublisherRequestDTO;
 import io.github.pdrotmz.book_e_comm.dto.PublisherResponseDTO;
+import io.github.pdrotmz.book_e_comm.exception.publisher.PublisherNotFoundByIdException;
+import io.github.pdrotmz.book_e_comm.exception.publisher.PublisherNotFoundByNameException;
 import io.github.pdrotmz.book_e_comm.model.Publisher;
 import io.github.pdrotmz.book_e_comm.repository.PublisherRepository;
 import org.springframework.http.HttpStatus;
@@ -20,7 +22,6 @@ public class PublisherServiceImpl implements PublisherService {
     public PublisherServiceImpl(PublisherRepository repository) {
         this.repository = repository;
     }
-
 
     @Override
     public PublisherResponseDTO registerPublisher(PublisherRequestDTO request) {
@@ -41,7 +42,7 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public Optional<Publisher> findPublisherById(UUID id) {
         if(repository.findById(id).isEmpty() || repository.findById(id) == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new PublisherNotFoundByIdException(id);
         }
         return repository.findById(id);
     }
@@ -49,7 +50,7 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public Optional<Publisher> findPublisherByName(String name) {
         if(repository.findPublisherByName(name).isEmpty() || repository.findPublisherByName(name) == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new PublisherNotFoundByNameException(name);
         }
         return repository.findPublisherByName(name);
     }
@@ -60,7 +61,7 @@ public class PublisherServiceImpl implements PublisherService {
             existingPublisher.setName(publisher.getName());
 
             return repository.save(existingPublisher);
-        }).map(Optional::of).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        }).map(Optional::of).orElseThrow(() -> new PublisherNotFoundByIdException(id));
     }
 
     @Override
