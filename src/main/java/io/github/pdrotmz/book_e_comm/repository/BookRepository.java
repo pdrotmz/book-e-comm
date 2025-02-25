@@ -1,5 +1,6 @@
 package io.github.pdrotmz.book_e_comm.repository;
 
+import io.github.pdrotmz.book_e_comm.dto.BookResponseDTO;
 import io.github.pdrotmz.book_e_comm.model.Book;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,4 +37,13 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
             );
 
     boolean existsByNameIgnoreCaseAndAuthorId(@NotBlank(message = "Title cannot be empty") String name, @NotNull(message = "Author's id cannot be empty") UUID authorId);
+
+    @Query("SELECT b FROM Book b JOIN FETCH b.author WHERE b.author.id =:authorId")
+    List<Book> findBookByAuthor(@Param("authorId") UUID authorId);
+
+    @Query("SELECT b FROM Book b JOIN FETCH b.publisher WHERE b.publisher.name =:publisherName")
+    List<Book> findBookByPublisherName(@Param("publisherName") String publisherName);
+
+    @Query("SELECT b FROM Book b JOIN FETCH b.author WHERE b.author.name =:authorName")
+    List<Book> findBookByAuthorName(@Param("authorName") String authorName);
 }
