@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -69,6 +70,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public List<Book> findAllBooks() {
+        return repository.findAll();
+    }
+
+    @Override
     public Page<BookResponseDTO> findAllBooks(int page, int size, String name, UUID authorId, BigDecimal minPrice, BigDecimal maxPrice) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
 
@@ -82,6 +88,33 @@ public class BookServiceImpl implements BookService {
                 book.getAuthor().getName(),
                 book.getPublisher().getName()
         ));
+    }
+
+    @Override
+    public List<Book> findBookByAuthor(UUID authorId) {
+        if(repository.findBookByAuthor(authorId).isEmpty() || repository.findBookByAuthor(authorId) == null) {
+            throw new BookNotFoundByAuthorException(authorId);
+        }
+        return repository.findBookByAuthor(authorId);
+    }
+
+    @Override
+    public List<Book> findBookByAuthorName(String authorName) {
+        if(repository.findBookByAuthorName(authorName).isEmpty() ||
+                repository.findBookByAuthorName(authorName) == null) {
+            throw new BookNotFoundByAuthorNameException(authorName);
+        }
+        return repository.findBookByAuthorName(authorName);
+    }
+
+    @Override
+    public List<Book> findBookByPublisherName(String publisherName) {
+        if(repository.findBookByPublisherName(publisherName).isEmpty() ||
+                repository.findBookByPublisherName(publisherName) == null) {
+            throw new BookNotFoundByPublisherNameException(publisherName);
+        }
+
+        return repository.findBookByPublisherName(publisherName);
     }
 
     @Override
