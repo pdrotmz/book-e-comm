@@ -33,6 +33,12 @@ public class BookController {
     }
 
     @GetMapping
+    public ResponseEntity<List<Book>> findAllBooks() {
+        List<Book> books = bookService.findAllBooks();
+        return ResponseEntity.status(HttpStatus.OK).body(books);
+    }
+
+    @GetMapping("/filter/")
     public ResponseEntity<Page<BookResponseDTO>> findAllBooks(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -55,6 +61,24 @@ public class BookController {
     public ResponseEntity<Book> findBookByName(@PathVariable String name) {
         Optional<Book> bookName = bookService.findBookByName(name);
         return bookName.map(ResponseEntity::ok).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/search-by/author/id/{authorId}")
+    public ResponseEntity<List<Book>> findBookByAuthor(@PathVariable UUID authorId) {
+        List<Book> books = bookService.findBookByAuthor(authorId);
+        return ResponseEntity.status(HttpStatus.OK).body(books);
+    }
+
+    @GetMapping("/search-by/author/name/{authorName}")
+    public ResponseEntity<List<Book>> findBookByAuthorName(@PathVariable String authorName) {
+        List<Book> books = bookService.findBookByAuthorName(authorName);
+        return ResponseEntity.status(HttpStatus.OK).body(books);
+    }
+
+    @GetMapping("search-by/publisher/name/{publisherName}")
+    public ResponseEntity<List<Book>> findBookByPublisherName(@PathVariable String publisherName) {
+        List<Book> books = bookService.findBookByPublisherName(publisherName);
+        return ResponseEntity.status(HttpStatus.OK).body(books);
     }
 
     @PutMapping("/update/id/{id}")
