@@ -13,9 +13,9 @@ import java.util.UUID;
 public interface BookService {
 
     BookResponseDTO registerBook(BookRequestDTO request);
-    List<Book> findAllBooks();
     Page<BookResponseDTO> findAllBooks(int page, int size, String name, UUID authorId, BigDecimal minPrice, BigDecimal maxPrice);
-    List<Book> findBookByAuthor(UUID authorId);
+    List<Book> findAllBooks();
+    List<Book> findBookByAuthorId(UUID authorId);
     List<Book> findBookByAuthorName(String authorName);
     List<Book> findBookByPublisherName(String publisherName);
     Optional<Book> findBookById(UUID id);
