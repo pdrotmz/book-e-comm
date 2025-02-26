@@ -5,5 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 
-public record AuthorRequestDTO(@NotBlank String name, @NotBlank String description, List<Book> books) {
+public record AuthorRequestDTO(
+        @NotBlank String name,
+        @NotBlank String description,
+        List<Book> books) {
 }
