@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -135,6 +136,11 @@ public class BookServiceImpl implements BookService {
         }
 
         return repository.findBookByPublisherName(publisherName);
+    }
+
+    @Override
+    public List<Book> findBookByPublicationDate(LocalDate publicationDate) {
+        return repository.findBookRecentPublicationDate(publicationDate);
     }
 
     @Override
