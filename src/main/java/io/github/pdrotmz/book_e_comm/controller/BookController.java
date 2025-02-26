@@ -65,7 +65,7 @@ public class BookController {
 
     @GetMapping("/search-by/author/id/{authorId}")
     public ResponseEntity<List<Book>> findBookByAuthor(@PathVariable UUID authorId) {
-        List<Book> books = bookService.findBookByAuthor(authorId);
+        List<Book> books = bookService.findBookByAuthorId(authorId);
         return ResponseEntity.status(HttpStatus.OK).body(books);
     }
 
