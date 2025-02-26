@@ -1,9 +1,11 @@
 package io.github.pdrotmz.book_e_comm.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
@@ -15,11 +17,24 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @Column(name = "isbn", nullable = false, length = 13, unique = true)
+    private BigDecimal isbn;
+
     @Column(name = "name", length = 100, nullable = false, unique = true)
     private String name;
 
     @Column(name = "description", length = 255, nullable = true)
     private String description;
+
+    @Column(name = "publication_date", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private LocalDate publicationDate;
+
+    @Column(name = "page_number", nullable = true)
+    private Integer pageNumber;
+
+    @Column(name = "language", nullable = false, length = 20)
+    private String language;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
@@ -40,10 +55,17 @@ public class Book {
     public Book() {
     }
 
-    public Book(UUID id, String name, String description, Integer quantity, BigDecimal price, Publisher publisher, Author author) {
+    public Book(UUID id, BigDecimal isbn, String name, String description, LocalDate publicationDate,
+                Integer pageNumber, String language, Integer quantity, BigDecimal price,
+                Publisher publisher, Author author) {
+
         this.id = id;
+        this.isbn = isbn;
         this.name = name;
         this.description = description;
+        this.publicationDate = publicationDate;
+        this.pageNumber = pageNumber;
+        this.language = language;
         this.quantity = quantity;
         this.price = price;
         this.publisher = publisher;
@@ -56,6 +78,14 @@ public class Book {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public BigDecimal getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(BigDecimal isbn) {
+        this.isbn = isbn;
     }
 
     public String getName() {
@@ -72,6 +102,30 @@ public class Book {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDate getPublicationDate() {
+        return publicationDate;
+    }
+
+    public void setPublicationDate(LocalDate publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
+    public Integer getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(Integer pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public Integer getQuantity() {
