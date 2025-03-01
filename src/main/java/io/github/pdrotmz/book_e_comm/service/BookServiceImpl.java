@@ -19,6 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -57,15 +60,35 @@ public class BookServiceImpl implements BookService {
         }
 
         Book book = new Book();
+        book.setIsbn(request.isbn());
         book.setName(request.name());
         book.setDescription(book.getDescription());
+        book.setPageNumber(request.pageNumber());
+        book.setLanguage(request.language());
+        book.setPublicationDate(request.publicationDate());
         book.setQuantity(request.quantity());
         book.setPrice(request.price());
+
         book.setAuthor(author);
         book.setPublisher(publisher);
 
         repository.save(book);
-        return new BookResponseDTO(book.getId() ,book.getName(), book.getQuantity(), book.getPrice(), book.getAuthor().getName(), book.getPublisher().getName());
+        return new BookResponseDTO(
+                book.getId(),
+                book.getIsbn(),
+                book.getName(),
+                book.getPageNumber(),
+                book.getLanguage(),
+                book.getPublicationDate(),
+                book.getQuantity(),
+                book.getPrice(),
+                book.getAuthor().getName(),
+                book.getPublisher().getName());
+    }
+
+    @Override
+    public List<Book> findAllBooks() {
+        return repository.findAll();
     }
 
     @Override
@@ -76,12 +99,48 @@ public class BookServiceImpl implements BookService {
 
         return books.map(book -> new BookResponseDTO(
                 book.getId(),
+                book.getIsbn(),
                 book.getName(),
+                book.getPageNumber(),
+                book.getLanguage(),
+                book.getPublicationDate(),
                 book.getQuantity(),
                 book.getPrice(),
                 book.getAuthor().getName(),
                 book.getPublisher().getName()
         ));
+    }
+
+    @Override
+    public List<Book> findBookByAuthorId(UUID authorId) {
+        if(repository.findBookByAuthorId(authorId).isEmpty() || repository.findBookByAuthorId(authorId) == null) {
+            throw new BookNotFoundByAuthorException(authorId);
+        }
+        return repository.findBookByAuthorId(authorId);
+    }
+
+    @Override
+    public List<Book> findBookByAuthorName(String authorName) {
+        if(repository.findBookByAuthorName(authorName).isEmpty() ||
+                repository.findBookByAuthorName(authorName) == null) {
+            throw new BookNotFoundByAuthorNameException(authorName);
+        }
+        return repository.findBookByAuthorName(authorName);
+    }
+
+    @Override
+    public List<Book> findBookByPublisherName(String publisherName) {
+        if(repository.findBookByPublisherName(publisherName).isEmpty() ||
+                repository.findBookByPublisherName(publisherName) == null) {
+            throw new BookNotFoundByPublisherNameException(publisherName);
+        }
+
+        return repository.findBookByPublisherName(publisherName);
+    }
+
+    @Override
+    public List<Book> findBookByPublicationDate(LocalDate publicationDate) {
+        return repository.findBookRecentPublicationDate(publicationDate);
     }
 
     @Override

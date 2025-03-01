@@ -41,6 +41,39 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(BookNotFoundByAuthorException.class)
+    public ResponseEntity<Object> handleBookNotFoundByAuthorException(BookNotFoundByAuthorException exception) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("error", "Not Found");
+        body.put("message", exception.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BookNotFoundByAuthorNameException.class)
+    public ResponseEntity<Object> handleBookNotFoundByAuthorNameException(BookNotFoundByAuthorNameException exception) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("error", "Not Found");
+        body.put("message", exception.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BookNotFoundByPublisherNameException.class)
+    public ResponseEntity<Object> handleBookNotFoundByPublisherNameException(BookNotFoundByPublisherNameException exception) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("error", "Not Found");
+        body.put("message", exception.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(AuthorNotFoundByIdException.class)
     public ResponseEntity<Object> handleAuthorNotFoundByIdException(AuthorNotFoundByIdException exception) {
         Map<String, Object> body = new LinkedHashMap<>();

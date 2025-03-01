@@ -1,5 +1,6 @@
 package io.github.pdrotmz.book_e_comm.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -18,9 +19,9 @@ public class Publisher {
     @Column(name = "name", length = 150, nullable = false)
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Book> books = new ArrayList<>();
-
 
     public UUID getId() {
         return id;
