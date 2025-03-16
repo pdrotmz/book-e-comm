@@ -10,6 +10,8 @@ import io.github.pdrotmz.book_e_comm.model.Publisher;
 import io.github.pdrotmz.book_e_comm.repository.AuthorRepository;
 import io.github.pdrotmz.book_e_comm.repository.BookRepository;
 import io.github.pdrotmz.book_e_comm.repository.PublisherRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -151,14 +153,17 @@ public class BookServiceImpl implements BookService {
         return repository.findById(id);
     }
 
+    @Cacheable(value = "books", key = "#name")
     @Override
     public Optional<Book> findBookByName(String name) {
         if(repository.findBooksByName(name) == null || repository.findBooksByName(name).isEmpty()) {
             throw new BookNotFoundByNameException(name);
         }
+        System.out.println("Procurando no PostgreSQL");
         return repository.findBooksByName(name);
     }
 
+    @CacheEvict(value = "books", key = "#book.name")
     @Override
     public Optional<Book> updateBookById(UUID id, Book book) {
         return repository.findById(id).map(existingBook -> {

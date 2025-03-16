@@ -3,6 +3,7 @@ package io.github.pdrotmz.book_e_comm.repository;
 import io.github.pdrotmz.book_e_comm.model.Book;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @Repository
 public interface BookRepository extends JpaRepository<Book, UUID> {
 
+    @Cacheable(value = "books", key = "#name")
     @Query("SELECT b FROM Book b WHERE b.name =:name")
     Optional<Book> findBooksByName(@Param("name") String name);
 
