@@ -3,11 +3,14 @@ package io.github.pdrotmz.book_e_comm.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.*;
 
 @Entity
 @Table(name = "author")
-public class Author {
+public class Author implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
