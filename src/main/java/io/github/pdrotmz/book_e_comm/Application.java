@@ -2,12 +2,14 @@ package io.github.pdrotmz.book_e_comm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 
+@EnableCaching
 @SpringBootApplication
-public class BookECommApplication {
+public class Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BookECommApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
 
 }
